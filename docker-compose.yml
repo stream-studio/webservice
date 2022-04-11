@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+    db:
+        image: mongo
+    dev:
+        container_name: stream_studio_webservice
+        image: stream_studio_webservice:1.0.0
+        build:
+            context: .
+            target: development
+            dockerfile: ./Dockerfile
+        command: npm run start:debug
+        depends_on:
+            - db
+        ports:
+            - 3000:3000
+            - 9229:9229
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+        environment:
+            - MONGO_URI=mongodb://db/nest
+            - SECRET_KEY=DShslal2iDGbFqi8BbpEPhzkjLyrbbCRGHSoCVjvHKBr87vfxEoMNiQJu4HSXvNo
